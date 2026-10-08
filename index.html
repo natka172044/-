@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Поступление за границу - Интерактивный урок</title>
+    <style>
+        :root {
+            --primary: #FF6B6B;
+            --secondary: #4ECDC4;
+            --accent: #FFE66D;
+            --success: #95E1D3;
+            --error: #FF6B6B;
+            --text: #2C3E50;
+            --bg: #F7F9FC;
+            --card-bg: #FFFFFF;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+            --radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        #app {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: var(--radius);
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .header h1 {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
+            opacity: 0.95;
+        }
+
+        /* Screens */
+        .screen {
+            display: none;
+            animation: fadeIn 0.4s ease-in;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 14px 32px;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 44px;
+            min-width: 44px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: var(--shadow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(255,107,107,0.3);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #45b7af;
+        }
+
+        .btn:focus-visible {
+            outline: 3px solid var(--accent);
+            outline-offset: 2px;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+        }
+
+        .card h2 {
+            color: var(--primary);
+            margin-bottom: 16px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card h3 {
+            color: var(--secondary);
+            margin: 16px 0 12px;
+            font-size: 1.2rem;
+        }
+
+        .card p, .card li {
+            margin-bottom: 10px;
+            line-height: 1.8;
+        }
+
+        .card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .card li:before {
+            content: "✓ ";
+            color: var(--secondary);
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        /* Start Screen */
+        .start-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .start-screen .emoji-large {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Content Sections */
+        .content-section {
+            margin-bottom: 30px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, var(--accent), #fff);
+            padding: 20px;
+            border-radius: var(--radius);
+            border-left: 4px solid var(--primary);
+        }
+
+        .info-box .icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        /* Quiz */
+        .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .timer {
+            background: var(--accent);
+            padding: 16px;
+            border-radius: var(--radius);
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .timer.warning {
+            background: var(--error);
+            color: white;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+
+        .question-number {
+            color: var(--secondary);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            padding: 16px 20px;
+            background: var(--bg);
+            border: 2px solid transparent;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 44px;
+            text-align: left;
+            font-size: 1rem;
+        }
+
+        .option:hover {
+            background: #e8f4f8;
+            border-color: var(--secondary);
+        }
+
+        .option.selected {
+            background: var(--secondary);
+            color: white;
+            border-color: var(--secondary);
+        }
+
+        .option.correct {
+            background: var(--success);
+            border-color: var(--success);
+            color: var(--text);
+        }
+
+        .option.incorrect {
+            background: var(--error);
+            border-color: var(--error);
+            color: white;
+        }
+
+        .option:focus-visible {
+            outline: 3px solid var(--accent);
+            outline-offset: 2px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--bg);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--secondary), var(--primary));
+            transition: width 0.3s ease;
+        }
+
+        /* Results */
+        .results-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .score-circle {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 30px auto;
+            color: white;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .score-number {
+            font-size: 3rem;
+            font-weight: bold;
+        }
+
+        .score-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .results-details {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .results-details h3 {
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .result-item {
+            padding: 16px;
+            margin-bottom: 12px;
+            border-radius: var(--radius);
+            background: var(--bg);
+        }
+
+        .result-item.correct {
+            border-left: 4px solid var(--success);
+        }
+
+        .result-item.incorrect {
+            border-left: 4px solid var(--error);
+        }
+
+        .result-question {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .result-answer {
+            font-size: 0.95rem;
+            color: #666;
+        }
+
+        /* Print Styles */
+        @media print {
+            .btn, .timer, .progress-bar {
+                display: none !important;
+            }
+            
+            body {
+                background: white;
+            }
+            
+            .card {
+                page-break-inside: avoid;
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+            
+            .header {
+                background: white !important;
+                color: black !important;
+                border: 2px solid var(--primary);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            #app {
+                padding: 10px;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .question-card {
+                padding: 20px;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Navigation */
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        /* Feedback Message */
+        .feedback {
+            padding: 16px;
+            border-radius: var(--radius);
+            margin-top: 20px;
+            font-weight: 600;
+            text-align: center;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .feedback.success {
+            background: var(--success);
+            color: var(--text);
+        }
+
+        .feedback.error {
+            background: var(--error);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+
+    <script>
+        // Constants
+        const QUIZ_TIME = 600; // 10 minutes in seconds
+        const QUESTIONS = [
+            {
+                question: "Какой экзамен чаще всего требуется для поступления в университеты США?",
+                options: ["IELTS", "SAT/ACT", "TOEFL", "DELE"],
+                correct: 1,
+                explanation: "SAT (Scholastic Assessment Test) или ACT - стандартные тесты для поступления в вузы США"
+            },
+            {
+                question: "Что такое Personal Statement?",
+                options: [
+                    "Рекомендательное письмо от учителя",
+                    "Мотивационное письмо от заявителя",
+                    "Сертификат о знании языка",
+                    "Аттестат зрелости"
+                ],
+                correct: 1,
+                explanation: "Personal Statement - это эссе, где вы рассказываете о себе, своих целях и мотивации"
+            },
+            {
+                question: "Какой минимальный балл IELTS обычно требуется для топ-университетов?",
+                options: ["5.0", "6.0", "6.5-7.5", "8.5"],
+                correct: 2,
+                explanation: "Большинство топ-университетов требуют IELTS 6.5-7.5 баллов"
+            },
+            {
+                question: "Когда обычно начинается подача документов в университеты США?",
+                options: [
+                    "За 6 месяцев до начала учебы",
+                    "За 1 год до начала учебы",
+                    "За 2 года до начала учебы",
+                    "За 3 месяца до начала учебы"
+                ],
+                correct: 1,
+                explanation: "Процесс подачи обычно начинается за год до начала учебного года (сентябрь-декабрь 11 класса)"
+            },
+            {
+                question: "Что такое Common App?",
+                options: [
+                    "Программа обмена студентами",
+                    "Единая платформа подачи документов в вузы США",
+                    "Стипендиальная программа",
+                    "Языковой курс"
+                ],
+                correct: 1,
+                explanation: "Common Application - единая онлайн-платформа для подачи документов в более чем 900 вузов США"
+            },
+            {
+                question: "Какой документ подтверждает завершение среднего образования?",
+                options: [
+                    "Сертификат IELTS",
+                    "Аттестат о среднем общем образовании",
+                    "Диплом бакалавра",
+                    "Справка о прохождении курсов"
+                ],
+                correct: 1,
+                explanation: "Аттестат о среднем общем образовании (11 классов) является основным документом"
+            },
+            {
+                question: "Что такое Letter of Recommendation?",
+                options: [
+                    "Письмо о зачислении",
+                    "Рекомендательное письмо от учителя/наставника",
+                    "Финансовая гарантия",
+                    "Визовое приглашение"
+                ],
+                correct: 1,
+                explanation: "Рекомендательные письма пишут учителя, counselors или наставники, знающие вас"
+            },
+            {
+                question: "Какая страна требует экзамен Gaokao для иностранных студентов?",
+                options: ["США", "Великобритания", "Китай", "Германия"],
+                correct: 2,
+                explanation: "Gaokao - национальный вступительный экзамен в Китае, хотя некоторые вузы принимают и другие тесты"
+            },
+            {
+                question: "Что такое Financial Aid?",
+                options: [
+                    "Студенческая виза",
+                    "Финансовая помощь/стипендия",
+                    "Медицинская страховка",
+                    "Программа обмена"
+                ],
+                correct: 1,
+                explanation: "Financial Aid - финансовая помощь, которая может покрывать часть или полную стоимость обучения"
+            },
+            {
+                question: "Какой тест требуется для поступления в магистратуру большинства стран?",
+                options: ["SAT", "GRE/GMAT", "IELTS", "TOEFL"],
+                correct: 1,
+                explanation: "GRE (для большинства специальностей) или GMAT (для бизнес-школ) требуются для магистратуры"
+            }
+        ];
+
+        // State
+        let state = {
+            currentScreen: 'start',
+            currentQuestion: 0,
+            answers: [],
+            score: 0,
+            timeLeft: QUIZ_TIME,
+            timerInterval: null,
+            quizStarted: false
+        };
+
+        // Audio context for sound effects
+        let audioContext = null;
+
+        function initAudio() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playErrorSound() {
+            initAudio();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = 200;
+            oscillator.type = 'sawtooth';
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.5);
+        }
+
+        function playSuccessSound() {
+            initAudio();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = 440;
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.3);
+        }
+
+        // Render functions
+        function render() {
+            const app = document.getElementById('app');
+            app.textContent = ''; // Clear previous content
+            
+            switch(state.currentScreen) {
+                case 'start':
+                    renderStartScreen(app);
+                    break;
+                case 'content':
+                    renderContentScreen(app);
+                    break;
+                case 'quiz':
+                    renderQuizScreen(app);
+                    break;
+                case 'results':
+                    renderResultsScreen(app);
+                    break;
+            }
+        }
+
+        function renderStartScreen(container) {
+            const header = document.createElement('header');
+            header.className = 'header';
+            header.innerHTML = `
+                <h1>🎓 Поступление за границу</h1>
+                <p>Интерактивный урок для 10 класса</p>
+            `;
+            container.appendChild(header);
+
+            const main = document.createElement('main');
+            main.className = 'start-screen';
+            main.innerHTML = `
+                <div class="emoji-large">🌍</div>
+                <div class="card">
+                    <h2>📚 Добро пожаловать!</h2>
+                    <p style="font-size: 1.1rem; margin-bottom: 20px;">
+                        Этот урок поможет вам разобраться в особенностях поступления в зарубежные университеты.
+                    </p>
+                    <p style="margin-bottom: 20px;">
+                        <strong>Что вы узнаете:</strong>
+                    </p>
+                    <ul style="text-align: left; max-width: 500px; margin: 0 auto 30px;">
+                        <li>Какие экзамены нужно сдавать</li>
+                        <li>Какие документы собирать</li>
+                        <li>Сроки подачи заявок</li>
+                        <li>Особенности разных стран</li>
+                        <li>Финансовая помощь и стипендии</li>
+                    </ul>
+                    <p style="margin-bottom: 30px; color: var(--primary); font-weight: 600;">
+                        В конце вас ждет тест из 10 вопросов с таймером! ⏱️
+                    </p>
+                </div>
+                <div class="nav-buttons">
+                    <button class="btn btn-primary" onclick="startLesson()">
+                        🚀 Начать урок
+                    </button>
+                </div>
+            `;
+            container.appendChild(main);
+        }
+
+        function renderContentScreen(container) {
+            const header = document.createElement('header');
+            header.className = 'header';
+            header.innerHTML = `
+                <h1>📖 Учебный материал</h1>
+                <p>Изучите информацию перед тестом</p>
+            `;
+            container.appendChild(header);
+
+            const main = document.createElement('main');
+            
+            // Section 1: Exams
+            const section1 = document.createElement('section');
+            section1.className = 'card content-section';
+            section1.innerHTML = `
+                <h2>📝 Экзамены и тесты</h2>
+                <div class="info-grid">
+                    <div class="info-box">
+                        <div class="icon">🇺🇸</div>
+                        <h3>США и Канада</h3>
+                        <ul>
+                            <li><strong>SAT</strong> - для бакалавриата (математика + чтение)</li>
+                            <li><strong>ACT</strong> - альтернатива SAT</li>
+                            <li><strong>GRE</strong> - для магистратуры</li>
+                            <li><strong>GMAT</strong> - для бизнес-школ</li>
+                        </ul>
+                    </div>
+                    <div class="info-box">
+                        <div class="icon">🇬🇧</div>
+                        <h3>Великобритания</h3>
+                        <ul>
+                            <li><strong>A-Levels</strong> - британский школьный экзамен</li>
+                            <li><strong>IB</strong> - International Baccalaureate</li>
+                            <li><strong>UCAS</strong> - система подачи заявок</li>
+                        </ul>
+                    </div>
+                    <div class="info-box">
+                        <div class="icon">🌐</div>
+                        <h3>Языковые тесты</h3>
+                        <ul>
+                            <li><strong>IELTS</strong> - 6.5-7.5 для топ-вузов</li>
+                            <li><strong>TOEFL</strong> - 80-100+ баллов</li>
+                            <li><strong>Duolingo English Test</strong> - новая альтернатива</li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+            main.appendChild(section1);
+
+            // Section 2: Documents
+            const section2 = document.createElement('section');
+            section2.className = 'card content-section';
+            section2.innerHTML = `
+                <h2>📋 Необходимые документы</h2>
+                <div class="info-grid">
+                    <div class="info-box">
+                        <div class="icon">📄</div>
+                        <h3>Академические документы</h3>
+                        <ul>
+                            <li>Аттестат/диплом с оценками</li>
+                            <li>Транскрипт (выписка оценок)</li>
+                            <li>Сертификаты языковых тестов</li>
+                            <li>Результаты SAT/ACT/GRE</li>
+                        </ul>
+                    </div>
+                    <div class="info-box">
+                        <div class="icon">✍️</div>
+                        <h3>Эссе и рекомендации</h3>
+                        <ul>
+                            <li><strong>Personal Statement</strong> - мотивационное письмо</li>
+                            <li><strong>Letters of Recommendation</strong> - 2-3 рекомендательных письма</li>
+                            <li><strong>Supplemental Essays</strong> - дополнительные эссе для конкретных вузов</li>
+                        </ul>
+                    </div>
+                    <div class="info-box">
+                        <div class="icon">💼</div>
+                        <h3>Дополнительно</h3>
+                        <ul>
+                            <li>Резюме/CV</li>
+                            <li>Портфолио (для творческих специальностей)</li>
+                            <li>Финансовые документы</li>
+                            <li>Копия паспорта</li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+            main.appendChild(section2);
+
+            // Section 3: Timeline
+            const section3 = document.createElement('section');
+            section3.className = 'card content-section';
+            section3.innerHTML = `
+                <h2>📅 Сроки подачи (США)</h2>
+                <div class="info-grid">
+                    <div class="info-box">
+                        <div class="icon">🍂</div>
+                        <h3>Сентябрь-Октябрь 11 класса</h3>
+                        <ul>
+                            <li>Финальная подготовка документов</li>
+                            <li>Сдача языковых тестов</li>
+                            <li>Запрос рекомендаций</li>
+                        </ul>
+                    </div>
+                    <div class="info-box">
+                        <div class="icon">🎃</div>
+                        <h3>Ноябрь (Early Action/Decision)</h3>
+                        <ul>
+                            <li>Дедлайн для раннего поступления</li>
+                            <li>Результаты в декабре</li>
+                            <li>Обязательное зачисление (Early Decision)</li>
+                        </ul>
+                    </div>
+                    <div class="info-box">
+                        <div class="icon">🎄</div>
+                        <h3>Январь (Regular Decision)</h3>
+                        <ul>
+                            <li>Основной дедлайн подачи</li>
+                            <li>Результаты в марте-апреле</li>
+                            <li>Выбор вуза до 1 мая</li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+            main.appendChild(section3);
+
+            // Section 4: Financial Aid
+            const section4 = document.createElement('section');
+            section4.className = 'card content-section';
+            section4.innerHTML = `
+                <h2>💰 Финансовая помощь</h2>
+                <div class="info-grid">
+                    <div class="info-box">
+                        <div class="icon">🎓</div>
+                        <h3>Need-based Aid</h3>
+                        <p>Помощь на основе финансового положения семьи. Многие топ-вузы США гарантируют покрытие 100% потребностей.</p>
+                    </div>
+                    <div class="info-box">
+                        <div class="icon">🏆</div>
+                        <h3>Merit-based Scholarships</h3>
+                        <p>Стипендии за академические достижения, таланты, спортивные успехи. Конкуренция очень высокая.</p>
+                    </div>
+                    <div class="info-box">
+                        <div class="icon">🌍</div>
+                        <h3>Международные стипендии</h3>
+                        <p>Программы для иностранных студентов: Fulbright, Chevening, DAAD и другие государственные программы.</p>
+                    </div>
+                </div>
+            `;
+            main.appendChild(section4);
+
+            // Navigation
+            const nav = document.createElement('div');
+            nav.className = 'nav-buttons';
+            nav.innerHTML = `
+                <button class="btn btn-secondary" onclick="goToStart()">← Назад</button>
+                <button class="btn btn-primary" onclick="startQuiz()">🎯 Перейти к тесту</button>
+            `;
+            main.appendChild(nav);
+
+            container.appendChild(main);
+        }
+
+        function renderQuizScreen(container) {
+            const header = document.createElement('header');
+            header.className = 'header';
+            header.innerHTML = `
+                <h1>🎯 Итоговый тест</h1>
+                <p>Ответьте на 10 вопросов</p>
+            `;
+            container.appendChild(header);
+
+            const main = document.createElement('main');
+            main.className = 'quiz-container';
+
+            // Timer
+            const timer = document.createElement('div');
+            timer.className = 'timer';
+            timer.id = 'timer';
+            timer.setAttribute('role', 'timer');
+            timer.setAttribute('aria-live', 'polite');
+            timer.textContent = formatTime(state.timeLeft);
+            main.appendChild(timer);
+
+            // Progress bar
+            const progress = document.createElement('div');
+            progress.className = 'progress-bar';
+            progress.innerHTML = `
+                <div class="progress-fill" style="width: ${(state.currentQuestion / QUESTIONS.length) * 100}%"></div>
+            `;
+            main.appendChild(progress);
+
+            // Question
+            const question = QUESTIONS[state.currentQuestion];
+            const questionCard = document.createElement('div');
+            questionCard.className = 'question-card';
+            
+            const questionNumber = document.createElement('div');
+            questionNumber.className = 'question-number';
+            questionNumber.textContent = `Вопрос ${state.currentQuestion + 1} из ${QUESTIONS.length}`;
+            questionCard.appendChild(questionNumber);
+
+            const questionText = document.createElement('div');
+            questionText.className = 'question-text';
+            questionText.textContent = question.question;
+            questionCard.appendChild(questionText);
+
+            const options = document.createElement('div');
+            options.className = 'options';
+            options.setAttribute('role', 'radiogroup');
+            
+            question.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.className = 'option';
+                button.textContent = option;
+                button.onclick = () => selectAnswer(index);
+                button.setAttribute('role', 'radio');
+                button.setAttribute('aria-checked', 'false');
+                options.appendChild(button);
+            });
+            
+            questionCard.appendChild(options);
+            main.appendChild(questionCard);
+
+            // Feedback area
+            const feedback = document.createElement('div');
+            feedback.id = 'feedback';
+            main.appendChild(feedback);
+
+            container.appendChild(main);
+        }
+
+        function renderResultsScreen(container) {
+            const header = document.createElement('header');
+            header.className = 'header';
+            header.innerHTML = `
+                <h1>🎉 Результаты теста</h1>
+                <p>Ваш итоговый результат</p>
+            `;
+            container.appendChild(header);
+
+            const main = document.createElement('main');
+            main.className = 'results-screen';
+
+            // Score circle
+            const percentage = Math.round((state.score / QUESTIONS.length) * 100);
+            const scoreCircle = document.createElement('div');
+            scoreCircle.className = 'score-circle';
+            scoreCircle.innerHTML = `
+                <div class="score-number">${state.score}/${QUESTIONS.length}</div>
+                <div class="score-label">${percentage}%</div>
+            `;
+            main.appendChild(scoreCircle);
+
+            // Message
+            const message = document.createElement('div');
+            message.className = 'card';
+            let messageText = '';
+            let emoji = '';
+            
+            if (percentage >= 90) {
+                messageText = 'Отлично! Вы готовы к поступлению за границу!';
+                emoji = '🏆';
+            } else if (percentage >= 70) {
+                messageText = 'Хороший результат! Еще немного практики, и вы будете готовы!';
+                emoji = '👍';
+            } else if (percentage >= 50) {
+                messageText = 'Неплохо! Рекомендуем повторить материал.';
+                emoji = '📚';
+            } else {
+                messageText = 'Стоит вернуться к учебному материалу и попробовать снова.';
+                emoji = '💪';
+            }
+            
+            message.innerHTML = `
+                <h2>${emoji} ${messageText}</h2>
+                <p>Правильных ответов: <strong>${state.score}</strong> из <strong>${QUESTIONS.length}</strong></p>
+            `;
+            main.appendChild(message);
+
+            // Detailed results
+            const details = document.createElement('div');
+            details.className = 'results-details';
+            details.innerHTML = `<h3>📊 Подробные результаты</h3>`;
+            
+            QUESTIONS.forEach((q, index) => {
+                const userAnswer = state.answers[index];
+                const isCorrect = userAnswer === q.correct;
+                
+                const item = document.createElement('div');
+                item.className = `result-item ${isCorrect ? 'correct' : 'incorrect'}`;
+                item.innerHTML = `
+                    <div class="result-question">${index + 1}. ${q.question}</div>
+                    <div class="result-answer">
+                        ${isCorrect ? '✓' : '✗'} Ваш ответ: ${userAnswer !== null ? q.options[userAnswer] : 'Нет ответа'}
+                        ${!isCorrect ? `<br>✓ Правильный ответ: ${q.options[q.correct]}` : ''}
+                        <br><em style="color: var(--secondary);">${q.explanation}</em>
+                    </div>
+                `;
+                details.appendChild(item);
+            });
+            
+            main.appendChild(details);
+
+            // Navigation
+            const nav = document.createElement('div');
+            nav.className = 'nav-buttons';
+            nav.innerHTML = `
+                <button class="btn btn-secondary" onclick="restartQuiz()">🔄 Пройти тест снова</button>
+                <button class="btn btn-primary" onclick="window.print()">🖨️ Распечатать как PDF</button>
+            `;
+            main.appendChild(nav);
+
+            container.appendChild(main);
+        }
+
+        // Handlers
+        function startLesson() {
+            state.currentScreen = 'content';
+            render();
+        }
+
+        function goToStart() {
+            state.currentScreen = 'start';
+            render();
+        }
+
+        function startQuiz() {
+            state.currentScreen = 'quiz';
+            state.currentQuestion = 0;
+            state.answers = [];
+            state.score = 0;
+            state.timeLeft = QUIZ_TIME;
+            state.quizStarted = true;
+            render();
+            startTimer();
+        }
+
+        function startTimer() {
+            if (state.timerInterval) {
+                clearInterval(state.timerInterval);
+            }
+            
+            state.timerInterval = setInterval(() => {
+                state.timeLeft--;
+                updateTimer();
+                
+                if (state.timeLeft <= 0) {
+                    clearInterval(state.timerInterval);
+                    finishQuiz();
+                }
+            }, 1000);
+        }
+
+        function updateTimer() {
+            const timer = document.getElementById('timer');
+            if (timer) {
+                timer.textContent = formatTime(state.timeLeft);
+                
+                if (state.timeLeft <= 60) {
+                    timer.classList.add('warning');
+                } else {
+                    timer.classList.remove('warning');
+                }
+            }
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function selectAnswer(answerIndex) {
+            const question = QUESTIONS[state.currentQuestion];
+            const isCorrect = answerIndex === question.correct;
+            
+            state.answers.push(answerIndex);
+            
+            if (isCorrect) {
+                state.score++;
+                playSuccessSound();
+                showFeedback(true, question.explanation);
+            } else {
+                playErrorSound();
+                showFeedback(false, question.explanation);
+            }
+            
+            // Highlight selected answer
+            const options = document.querySelectorAll('.option');
+            options.forEach((opt, idx) => {
+                opt.disabled = true;
+                if (idx === answerIndex) {
+                    opt.classList.add(isCorrect ? 'correct' : 'incorrect');
+                }
+                if (idx === question.correct && !isCorrect) {
+                    opt.classList.add('correct');
+                }
+            });
+            
+            // Move to next question after delay
+            setTimeout(() => {
+                if (state.currentQuestion < QUESTIONS.length - 1) {
+                    state.currentQuestion++;
+                    render();
+                } else {
+                    finishQuiz();
+                }
+            }, 2000);
+        }
+
+        function showFeedback(isCorrect, explanation) {
+            const feedback = document.getElementById('feedback');
+            if (feedback) {
+                feedback.className = `feedback ${isCorrect ? 'success' : 'error'}`;
+                feedback.textContent = isCorrect 
+                    ? `✓ Правильно! ${explanation}`
+                    : `✗ Неправильно. ${explanation}`;
+            }
+        }
+
+        function finishQuiz() {
+            if (state.timerInterval) {
+                clearInterval(state.timerInterval);
+            }
+            state.currentScreen = 'results';
+            state.quizStarted = false;
+            render();
+        }
+
+        function restartQuiz() {
+            state.currentScreen = 'content';
+            state.currentQuestion = 0;
+            state.answers = [];
+            state.score = 0;
+            state.timeLeft = QUIZ_TIME;
+            render();
+        }
+
+        // Initialize
+        render();
+    </script>
+</body>
+</html>
